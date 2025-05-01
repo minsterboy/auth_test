@@ -1,13 +1,21 @@
 import { json } from '@sveltejs/kit';
+import { createSupabaseClient } from '$lib/supabase';
 
 /** @type {import('./$types').RequestHandler} */
-export async function POST({ locals, cookies }) {
+export async function POST({ cookies }) {
 	try {
-		locals.user = null;
-		// 쿠키 삭제
-		cookies.delete('user', { path: '/', httpOnly: true });
+		const supabase = createSupabaseClient(cookies);
+		const { error } = await supabase.auth.signOut();
+
+		if (error) {
+			console.error('Logout error:', error);
+			return json({ error: '로그아웃에 실패했습니다.' }, { status: 500 });
+		}
+
+		console.log('Logged out, session: null');
 		return json({ success: true });
 	} catch (error) {
-		return json({ error: '로그아웃에 실패했습니다.' }, { status: 500 });
+		console.error('Logout error:', error);
+		return json({ error: '서버 오류가 발생했습니다.' }, { status: 500 });
 	}
 }

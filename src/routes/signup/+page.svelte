@@ -7,12 +7,12 @@
 	let isLoading = false;
 	let error = '';
 
-	async function login() {
+	async function signup() {
 		isLoading = true;
 		error = '';
 
 		try {
-			const response = await fetch('/api/login', {
+			const response = await fetch('/api/signup', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ email, password })
@@ -20,10 +20,10 @@
 
 			if (response.ok) {
 				await invalidate('supabase:auth');
-				await goto('/');
+				await goto('/login');
 			} else {
 				const { error: errMsg } = await response.json();
-				error = errMsg || '로그인에 실패했습니다.';
+				error = errMsg || '회원가입에 실패했습니다.';
 			}
 		} catch (err) {
 			error = '서버 오류가 발생했습니다.';
@@ -33,7 +33,7 @@
 	}
 </script>
 
-<h1>로그인</h1>
+<h1>회원가입</h1>
 <input type="email" bind:value={email} placeholder="이메일을 입력하세요" disabled={isLoading} />
 <input
 	type="password"
@@ -41,8 +41,8 @@
 	placeholder="비밀번호를 입력하세요"
 	disabled={isLoading}
 />
-<button on:click={login} disabled={isLoading}>
-	{#if isLoading}로그인 중...{:else}Login{/if}
+<button on:click={signup} disabled={isLoading}>
+	{#if isLoading}가입 중...{:else}Sign Up{/if}
 </button>
 {#if error}
 	<p style="color: red;">{error}</p>
