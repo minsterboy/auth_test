@@ -1,7 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { createSupabaseClient } from '$lib/supabase';
 
-/** @type {import('./$types').RequestHandler} */
 export async function POST({ request, cookies }) {
 	try {
 		const { email, password } = await request.json();
@@ -14,7 +13,7 @@ export async function POST({ request, cookies }) {
 			email,
 			password,
 			options: {
-				emailRedirectTo: 'http://localhost:5173/login'
+				emailRedirectTo: 'http://localhost:5173/'
 			}
 		});
 
